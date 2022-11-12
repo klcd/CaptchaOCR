@@ -1,0 +1,15 @@
+base:
+  random_seed: 98723
+  batch_size: 16
+
+split:
+  train_fraction: 0.9
+  shuffle: True
+  input: 'data/raw'
+  output: 'data/split/'
+
+
+transform:
+  data_folder: 'data/'
+  image_width: 200
+  image_height: 50
