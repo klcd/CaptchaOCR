@@ -36,3 +36,23 @@ Adding pipeline steps to dvc works as follows
 
 ```
 
+The first stage e.g. is added as
+
+```
+dvc run --name split_data --deps data/raw \
+--outs data/split/characterset.txt \
+--outs data/split/x_train.txt \
+--outs data/split/y_train.txt \
+--outs data/split/x_valid.txt \
+--outs data/split/y_valid.txt \
+--params split \
+--params base \
+python src/stages/split.py --config params.yaml
+```
+
+Check out the two generate files! dvc.lock and dvc.yaml and note down what you find
+in them.
+
+
+Then add the other stages with the ```dvc run command```
+

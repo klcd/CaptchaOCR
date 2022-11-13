@@ -44,23 +44,23 @@ model_setup:
     conv1:
       name: conv1
       filters: 32
-      kernel_size: !!python/tuple [3,3]
+      kernel_size: [3,3]
       activation: relu
       kernel_initializer: he_normal
       padding: same
     max_pooling1:
       name: pool1
-      pool_size: !!python/tuple [2,2]
+      pool_size: [2,2]
     conv2:
       name: conv2
       filters: 64
-      kernel_size: !!python/tuple [3,3]
+      kernel_size: [3,3]
       activation: relu
       kernel_initializer: he_normal
       padding: same
     max_pooling2:
       name: pool2
-      pool_size: !!python/tuple [2,2]
+      pool_size: [2,2]
     reshape:
       name: reshape
     dense1:

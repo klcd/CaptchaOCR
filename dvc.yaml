@@ -1,0 +1,14 @@
+stages:
+  split_data:
+    cmd: python src/stages/split.py --config params.yaml
+    deps:
+    - data/raw
+    params:
+    - base
+    - split
+    outs:
+    - data/split/characterset.txt
+    - data/split/x_train.txt
+    - data/split/x_valid.txt
+    - data/split/y_train.txt
+    - data/split/y_valid.txt

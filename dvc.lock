@@ -1,0 +1,43 @@
+schema: '2.0'
+stages:
+  split_data:
+    cmd: python src/stages/split.py --config params.yaml
+    deps:
+    - path: data/raw
+      md5: 0715df1127d114a15a3b9b853a03c283.dir
+      size: 8973240
+      nfiles: 1070
+    params:
+      params.yaml:
+        base:
+          random_seed: 98723
+          image_width: 200
+          image_height: 50
+        split:
+          train_fraction: 0.9
+          shuffle: true
+          input_dir: data/raw
+          output_dir: data/split
+          outputs:
+            max_length: data/split/maxlength.txt
+            characters: data/split/characterset.txt
+            x_train: data/split/x_train.txt
+            y_train: data/split/y_train.txt
+            x_valid: data/split/x_valid.txt
+            y_valid: data/split/y_valid.txt
+    outs:
+    - path: data/split/characterset.txt
+      md5: 6aeac9565ac14d35602fdf95dc8bed1b
+      size: 38
+    - path: data/split/x_train.txt
+      md5: 35b156723b23428f246aeff1f8e7bfb5
+      size: 17784
+    - path: data/split/x_valid.txt
+      md5: 6c8829dda5b5ea8c6bcdb14626e1769e
+      size: 1976
+    - path: data/split/y_train.txt
+      md5: 11cabd50b614010a5e589fad81580af3
+      size: 5616
+    - path: data/split/y_valid.txt
+      md5: b237032f121ede08f4ff8815d1a2dee8
+      size: 624
