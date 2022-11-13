@@ -78,3 +78,15 @@ dvc run --name model_setup \
 --params base \
 python src/stages/model_setup.py --config params.yaml
 ```
+
+```
+dvc run --name training \
+ --deps models/untrained_model.h5 \
+ --deps data/datasets/train_dataset \
+ --deps data/datasets/validation_dataset \
+ --outs models/trained_model.h5 \
+ --outs models/prediction_model.h5 \
+ --params train \
+ --params base \
+ python src/stages/training.py --config params.yaml
+```

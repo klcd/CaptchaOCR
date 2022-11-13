@@ -157,3 +157,46 @@ stages:
     - path: models/untrained_model.h5
       md5: d7f6e32ad2765f85befaabb4e245ccc4
       size: 1776088
+  training:
+    cmd: python src/stages/training.py --config params.yaml
+    deps:
+    - path: data/datasets/train_dataset
+      md5: 88ac6166daa71d254d870e1559836ac8.dir
+      size: 74963417
+      nfiles: 3
+    - path: data/datasets/validation_dataset
+      md5: b457965d93eea5c845b9cfde0bce5178.dir
+      size: 8329369
+      nfiles: 3
+    - path: models/untrained_model.h5
+      md5: d7f6e32ad2765f85befaabb4e245ccc4
+      size: 1776088
+    params:
+      params.yaml:
+        base:
+          random_seed: 98723
+          image_width: 200
+          image_height: 50
+        train:
+          inputs:
+            model: models/untrained_model.h5
+            train_data: data/datasets/train_dataset
+            validation_data: data/datasets/validation_dataset
+          outputs:
+            model: models/trained_model.h5
+            prediction_model: models/prediction_model.h5
+            history_plot: plots/training_history.png
+            tensorboard: training_log
+          early_stopping:
+            patience: 5
+            restore_best_weights: true
+            monitor: val_loss
+          fit:
+            epochs: 2
+    outs:
+    - path: models/prediction_model.h5
+      md5: e7efdcc39d72830b929677c8b4442a05
+      size: 1773984
+    - path: models/trained_model.h5
+      md5: b811390a3b4f0e47775f308a67c1b2ad
+      size: 5290536
