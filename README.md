@@ -39,7 +39,8 @@ Adding pipeline steps to dvc works as follows
 The first stage e.g. is added as
 
 ```
-dvc run --name split_data --deps data/raw \
+dvc run --name split_data \
+--deps data/raw \
 --outs data/split/characterset.txt \
 --outs data/split/x_train.txt \
 --outs data/split/y_train.txt \
@@ -55,4 +56,17 @@ in them.
 
 
 Then add the other stages with the ```dvc run command```
+
+```
+dvc run --name create_datasets \
+ --deps data/split/x_train.txt \
+ --deps data/split/x_valid.txt \
+ --deps data/split/y_train.txt \
+ --deps data/split/y_valid.txt \
+ --outs data/datasets/train_dataset \
+ --outs data/datasets/validation_dataset \
+ --params transform \
+ --params base \
+ python src/stages/datasets.py --config params.yaml
+```
 

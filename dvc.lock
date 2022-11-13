@@ -41,3 +41,45 @@ stages:
     - path: data/split/y_valid.txt
       md5: b237032f121ede08f4ff8815d1a2dee8
       size: 624
+  create_datasets:
+    cmd: python src/stages/datasets.py --config params.yaml
+    deps:
+    - path: data/split/x_train.txt
+      md5: 35b156723b23428f246aeff1f8e7bfb5
+      size: 17784
+    - path: data/split/x_valid.txt
+      md5: 6c8829dda5b5ea8c6bcdb14626e1769e
+      size: 1976
+    - path: data/split/y_train.txt
+      md5: 11cabd50b614010a5e589fad81580af3
+      size: 5616
+    - path: data/split/y_valid.txt
+      md5: b237032f121ede08f4ff8815d1a2dee8
+      size: 624
+    params:
+      params.yaml:
+        base:
+          random_seed: 98723
+          image_width: 200
+          image_height: 50
+        transform:
+          batch_size: 16
+          inputs:
+            characters: data/split/characterset.txt
+            x_train: data/split/x_train.txt
+            y_train: data/split/y_train.txt
+            x_valid: data/split/x_valid.txt
+            y_valid: data/split/y_valid.txt
+          outputs:
+            train_dataset: data/datasets/train_dataset
+            valid_dataset: data/datasets/validation_dataset
+            sample_plot: plots/sample_plot.png
+    outs:
+    - path: data/datasets/train_dataset
+      md5: 4bf666dc25beda6177fd8682d3cba64b.dir
+      size: 37481729
+      nfiles: 2
+    - path: data/datasets/validation_dataset
+      md5: 11ebb53c2c6718595253309ed0614b75.dir
+      size: 4164706
+      nfiles: 2

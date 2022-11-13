@@ -12,3 +12,16 @@ stages:
     - data/split/x_valid.txt
     - data/split/y_train.txt
     - data/split/y_valid.txt
+  create_datasets:
+    cmd: python src/stages/datasets.py --config params.yaml
+    deps:
+    - data/split/x_train.txt
+    - data/split/x_valid.txt
+    - data/split/y_train.txt
+    - data/split/y_valid.txt
+    params:
+    - base
+    - transform
+    outs:
+    - data/datasets/train_dataset
+    - data/datasets/validation_dataset
