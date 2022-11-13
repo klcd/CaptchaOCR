@@ -2,10 +2,11 @@ import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
 
+@tf.keras.utils.register_keras_serializable()
 class CTCLayer(layers.Layer):
-    def __init__(self, name=None):
-        super().__init__(name=name)
+    def __init__(self, name=None, **kwargs):
         self.loss_fn = keras.backend.ctc_batch_cost
+        super(CTCLayer, self).__init__(name=name, **kwargs)
 
     def call(self, y_true, y_pred):
         # Compute the training-time loss value and add it

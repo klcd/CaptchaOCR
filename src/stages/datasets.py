@@ -6,9 +6,9 @@ import json
 
 import tensorflow as tf
 from tensorflow.keras import layers
-from encoding import encode_single_sample
+from src.stages.encoding import encode_single_sample
 
-def create_datasets(img_height, img_width, characters, batch_size,
+def create_datasets(image_height, image_width, characters, batch_size,
                      x_train, x_valid, y_train, y_valid):
 
     char_to_num = layers.experimental.preprocessing.StringLookup(vocabulary=list(characters),
@@ -18,8 +18,8 @@ def create_datasets(img_height, img_width, characters, batch_size,
 
     encoding = lambda img_path, label: encode_single_sample(img_path,
                                                             label,
-                                                            img_height,
-                                                            img_width,
+                                                            image_height,
+                                                            image_width,
                                                             char_to_num)
 
     train_dataset = tf.data.Dataset.from_tensor_slices((x_train, y_train))
@@ -48,7 +48,7 @@ def create_datasets(img_height, img_width, characters, batch_size,
 def create_datasets_from_config(config_path):
 
     with open(config_path) as config_file:
-        config = yaml.safe_load(config_file)
+        config = yaml.load(config_file)
 
 
     x_train = np.genfromtxt(os.path.join(config['transform']['input'], 'x_train.txt'), dtype=str)
@@ -57,8 +57,8 @@ def create_datasets_from_config(config_path):
     y_valid = np.genfromtxt(os.path.join(config['transform']['input'], 'y_valid.txt'), dtype=str)
     characters = np.genfromtxt(os.path.join(config['transform']['input'], 'characterset.txt'), dtype=str)
 
-    train_dataset, validation_dataset = create_datasets(img_height = config['transform']['image_height'],
-                                                        img_width = config['transform']['image_width'],
+    train_dataset, validation_dataset = create_datasets(image_height = config['transform']['image_height'],
+                                                        image_width = config['transform']['image_width'],
                                                         characters = characters,
                                                         batch_size = config['transform']['batch_size'],
                                                         x_train = x_train,
@@ -68,10 +68,6 @@ def create_datasets_from_config(config_path):
 
 
     print(train_dataset.element_spec)
-    print(type(train_dataset.element_spec))
-    tensor_spec = json.dumps(train_dataset.element_spec)
-    with open(os.path.join(config['transform']['output'], "tensorspec.json"), 'w') as fid:
-        fid.write(tensor_spec)
 
     tf.data.experimental.save(train_dataset, os.path.join(config['transform']['output'], 'train_dataset'))
     tf.data.experimental.save(validation_dataset, os.path.join(config['transform']['output'], 'validation_dataset'))

@@ -25,7 +25,7 @@ def split_data(images, labels, train_size=0.9, shuffle=True, random_seed=42):
 def split_data_from_config(config_path: Text):
 
     with open(config_path) as config_file:
-        config = yaml.safe_load(config_file)
+        config = yaml.load(config_file)
 
     data_dir = Path(config['split']['input'])
     images = np.array(sorted(list(map(str, list(data_dir.glob("*.png"))))))
