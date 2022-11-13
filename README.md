@@ -57,6 +57,8 @@ in them.
 
 Then add the other stages with the ```dvc run command```
 
+**Dataset stage**
+
 ```
 dvc run --name create_datasets \
  --deps data/split/x_train.txt \
@@ -70,14 +72,20 @@ dvc run --name create_datasets \
  python src/stages/datasets.py --config params.yaml
 ```
 
+
+**Model setup stage**
+
 ```
 dvc run --name model_setup \
---deps data/split/characterset.txt \
---outs models/untrained_model.h5 \
---params model_setup \
---params base \
-python src/stages/model_setup.py --config params.yaml
+ --deps data/split/characterset.txt \
+ --outs models/untrained_model.h5 \
+ --params model_setup \
+ --params base \
+ python src/stages/model_setup.py --config params.yaml
 ```
+
+
+**Training stage**
 
 ```
 dvc run --name training \
@@ -89,4 +97,15 @@ dvc run --name training \
  --params train \
  --params base \
  python src/stages/training.py --config params.yaml
+```
+
+
+**Prediction stage**
+
+```
+dvc run --name predict \
+ --deps models/prediction_model.h5 \
+ --deps data/split/characterset.txt \
+ --deps data/datasets/validation_dataset \
+ python src/stages/predict.py --config params.yaml
 ```
