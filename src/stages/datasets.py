@@ -57,15 +57,14 @@ def create_datasets_from_config(config_path):
     y_valid = np.genfromtxt(os.path.join(config['transform']['input'], 'y_valid.txt'), dtype=str)
     characters = np.genfromtxt(os.path.join(config['transform']['input'], 'characterset.txt'), dtype=str)
 
-    train_dataset, validation_dataset = create_datasets(image_height = config['transform']['image_height'],
-                                                        image_width = config['transform']['image_width'],
+    train_dataset, validation_dataset = create_datasets(image_height = config['base']['image_height'],
+                                                        image_width = config['base']['image_width'],
                                                         characters = characters,
                                                         batch_size = config['transform']['batch_size'],
                                                         x_train = x_train,
                                                         x_valid = x_valid,
                                                         y_train = y_train,
                                                         y_valid = y_valid)
-
 
     print(train_dataset.element_spec)
 
@@ -74,7 +73,6 @@ def create_datasets_from_config(config_path):
 
 
 if __name__ == "__main__":
-
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument('--config', dest='config_path', required=True)
     args = arg_parser.parse_args()

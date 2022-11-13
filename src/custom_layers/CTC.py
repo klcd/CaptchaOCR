@@ -4,6 +4,12 @@ from tensorflow.keras import layers
 
 @tf.keras.utils.register_keras_serializable()
 class CTCLayer(layers.Layer):
+    '''
+        CTC scoring layer. For more information see here
+
+    '''
+
+
     def __init__(self, name=None, **kwargs):
         self.loss_fn = keras.backend.ctc_batch_cost
         super(CTCLayer, self).__init__(name=name, **kwargs)

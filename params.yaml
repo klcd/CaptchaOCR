@@ -1,5 +1,7 @@
 base:
   random_seed: 98723
+  image_width: 200
+  image_height: 50
 
 split:
   train_fraction: 0.9
@@ -9,7 +11,6 @@ split:
 
 transform:
   image_width: 200
-  image_height: 50
   batch_size: 16
   input: data/split
   output: data/datasets
@@ -66,3 +67,22 @@ model_setup:
     dense2:
       name: dense2
       activation: softmax
+
+train:
+
+  inputs:
+    model: models/untrained_model.h5
+    train_data: data/datasets/train_dataset
+    validation_data: data/datasets/validation_dataset
+
+  outputs:
+    model: models/trained_model.h5
+    tensorboard: training_log
+
+  early_stopping:
+    patience: 5
+    restore_best_weights: True
+    monitor: val_loss
+
+  fit:
+    epochs: 100

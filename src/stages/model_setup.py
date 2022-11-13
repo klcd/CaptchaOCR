@@ -64,8 +64,8 @@ def create_model_from_config(config_path):
 
     characters = np.genfromtxt(os.path.join(config['model_setup']['input'], 'characterset.txt'), dtype=str)
 
-    model = create_model(image_height=config['model_setup']['image_height'],
-                         image_width=config['model_setup']['image_width'],
+    model = create_model(image_height=config['base']['image_height'],
+                         image_width=config['base']['image_width'],
                          optimizer=config['model_setup']['optimizer'],
                          characters=characters,
                          model_name=config['model_setup']['model_name'],
