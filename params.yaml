@@ -4,13 +4,65 @@ base:
 split:
   train_fraction: 0.9
   shuffle: True
-  input: 'data/raw'
-  output: 'data/split'
-
+  input: data/raw
+  output: data/split
 
 transform:
   image_width: 200
   image_height: 50
   batch_size: 16
-  input: 'data/split'
-  output: 'data/datasets'
+  input: data/split
+  output: data/datasets
+
+model_setup:
+
+  input: data/split
+  output: models/
+  model_name: ocr_model1
+  image_width: 200
+  image_height: 50
+  optimizer: keras.optimizers.Adam() #See if this can be done any better
+
+  layer_params:
+    conv1:
+      name: conv1
+      filters: 32
+      kernel_size: !!python/tuple [3,3]
+      activation: relu
+      kernel_initializer: he_normal
+      padding: same
+    max_pooling1:
+      name: pool1
+      pool_size: !!python/tuple [2,2]
+    conv2:
+      name: conv2
+      filters: 64
+      kernel_size: !!python/tuple [3,3]
+      activation: relu
+      kernel_initializer: he_normal
+      padding: same
+    max_pooling2:
+      name: pool2
+      pool_size: !!python/tuple [2,2]
+    reshape:
+      name: reshape
+    dense1:
+      name: dense1
+      units: 64
+      activation: relu
+    dropout1:
+      name: dropout1
+      rate: 0.2
+    bidirec_lstm1:
+      name: bidirec_lstm1
+      units: 128
+      return_sequences: True
+      dropout: 0.25
+    bidirec_lstm2:
+      name: bidirec_lstm2
+      units: 64
+      return_sequences: True
+      dropout: 0.25
+    dense2:
+      name: dense2
+      activation: softmax
