@@ -6,11 +6,17 @@ base:
 split:
   train_fraction: 0.9
   shuffle: True
-  input: data/raw
-  output: data/split
+  input_dir: data/raw
+  output_dir: data/split
+  outputs:
+    max_length: data/split/maxlength.txt
+    characters: data/split/characterset.txt
+    x_train: data/split/x_train.txt
+    y_train: data/split/y_train.txt
+    x_valid: data/split/x_valid.txt
+    y_valid: data/split/y_valid.txt
 
 transform:
-  image_width: 200
   batch_size: 16
   input: data/split
   output: data/datasets
@@ -20,8 +26,6 @@ model_setup:
   input: data/split
   output: models/
   model_name: ocr_model1
-  image_width: 200
-  image_height: 50
   optimizer: keras.optimizers.Adam() #See if this can be done any better
 
   layer_params:
@@ -86,3 +90,13 @@ train:
 
   fit:
     epochs: 100
+
+predict:
+
+  inputs:
+    trained_model: models/trained_model.h5
+    characters:
+    validation_data:
+
+  outputs:
+    predict_model: models/predict_model.h5

@@ -4,6 +4,7 @@ import yaml
 from pathlib import Path
 from typing import Text
 import os
+import pickle
 
 
 def split_data(images, labels, train_size=0.9, shuffle=True, random_seed=42):
@@ -27,13 +28,19 @@ def split_data_from_config(config_path: Text):
     with open(config_path) as config_file:
         config = yaml.load(config_file)
 
-    data_dir = Path(config['split']['input'])
+    data_dir = Path(config['split']['input_dir'])
     images = np.array(sorted(list(map(str, list(data_dir.glob("*.png"))))))
     labels = np.array([img.split(os.path.sep)[-1].split(".png")[0] for img in images])
 
+    # Maximum length of any captcha in the dataset
+    max_length = max([len(label) for label in labels])
+    with open(config['split']['outputs']['max_length'], 'wb') as fid:
+        pickle.dump(max_length,fid )
+
+    # Save the unique characters
     characters = np.unique([char for label in labels for char in label])
-    os.makedirs(config['split']['output'], exist_ok=True)
-    np.savetxt(os.path.join(config['split']['output'], 'characterset.txt'), characters, fmt='%s')
+    os.makedirs(config['split']['output_dir'], exist_ok=True)
+    np.savetxt(config['split']['outputs']['characters'], characters, fmt='%s')
 
     x_train, x_valid, y_train, y_valid = split_data(images,
                                                     labels,
@@ -42,10 +49,10 @@ def split_data_from_config(config_path: Text):
                                                     random_seed=config['base']['random_seed'])
 
 
-    np.savetxt(os.path.join(config['split']['output'], 'x_train.txt'), x_train, fmt='%s')
-    np.savetxt(os.path.join(config['split']['output'], 'y_train.txt'), y_train, fmt='%s')
-    np.savetxt(os.path.join(config['split']['output'], 'x_valid.txt'), x_valid, fmt='%s')
-    np.savetxt(os.path.join(config['split']['output'], 'y_valid.txt'), y_valid, fmt='%s')
+    np.savetxt(config['split']['outputs']['x_train'], x_train, fmt='%s')
+    np.savetxt(config['split']['outputs']['y_train'], y_train, fmt='%s')
+    np.savetxt(config['split']['outputs']['x_valid'], x_valid, fmt='%s')
+    np.savetxt(config['split']['outputs']['y_valid'], y_valid, fmt='%s')
 
     return x_train, x_valid, y_train, y_valid
 
