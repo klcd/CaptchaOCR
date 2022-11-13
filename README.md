@@ -51,7 +51,7 @@ dvc run --name split_data \
 python src/stages/split.py --config params.yaml
 ```
 
-Check out the two generate files! dvc.lock and dvc.yaml and note down what you find
+Check out the two generate files! **dvc.lock** and **dvc.yaml** and note down what you find
 in them.
 
 

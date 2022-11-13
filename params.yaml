@@ -103,7 +103,7 @@ train:
     monitor: val_loss
 
   fit:
-    epochs: 2
+    epochs: 100
 
 predict:
 
@@ -114,5 +114,4 @@ predict:
     valid_dataset: data/datasets/validation_dataset
 
   outputs:
-    predict_model: models/predict_model.h5
     sample_predictions: plots/predictions.png
