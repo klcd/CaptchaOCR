@@ -18,8 +18,20 @@ split:
 
 transform:
   batch_size: 16
-  input: data/split
-  output: data/datasets
+
+  inputs:
+    characters: data/split/characterset.txt
+    x_train: data/split/x_train.txt
+    y_train: data/split/y_train.txt
+    x_valid: data/split/x_valid.txt
+    y_valid: data/split/y_valid.txt
+
+  outputs:
+    train_dataset: data/datasets/train_dataset
+    valid_dataset: data/datasets/validation_dataset
+    sample_plot: plots/sample_plot.png
+
+
 
 model_setup:
 
@@ -81,6 +93,8 @@ train:
 
   outputs:
     model: models/trained_model.h5
+    prediction_model: models/prediction_model.h5
+    history_plot: plots/training_history.png
     tensorboard: training_log
 
   early_stopping:
@@ -89,14 +103,16 @@ train:
     monitor: val_loss
 
   fit:
-    epochs: 100
+    epochs: 2
 
 predict:
 
   inputs:
-    trained_model: models/trained_model.h5
-    characters:
-    validation_data:
+    prediction_model: models/prediction_model.h5
+    max_length: data/split/maxlength.txt
+    characters: data/split/characterset.txt
+    valid_dataset: data/datasets/validation_dataset
 
   outputs:
     predict_model: models/predict_model.h5
+    sample_predictions: plots/predictions.png

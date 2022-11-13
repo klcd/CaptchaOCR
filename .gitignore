@@ -1,5 +1,6 @@
 models
-data/
+data
+plots
 more_data/
 .ipynb_checkpoints
 __pycache__/

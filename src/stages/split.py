@@ -56,6 +56,9 @@ def split_data_from_config(config_path: Text):
 
     return x_train, x_valid, y_train, y_valid
 
+
+
+
 if __name__ == "__main__":
 
     arg_parser = argparse.ArgumentParser()

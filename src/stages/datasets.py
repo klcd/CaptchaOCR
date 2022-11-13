@@ -1,13 +1,12 @@
 import argparse
 import yaml
 import numpy as np
-import os
-import json
-
+import matplotlib.pyplot as plt
 import tensorflow as tf
 from tensorflow.keras import layers
 from src.stages.encoding import encode_single_sample
 
+@tf.autograph.experimental.do_not_convert
 def create_datasets(image_height, image_width, characters, batch_size,
                      x_train, x_valid, y_train, y_valid):
 
@@ -44,18 +43,37 @@ def create_datasets(image_height, image_width, characters, batch_size,
 
     return train_dataset, validation_dataset
 
+def get_decoding(characters):
+    return layers.experimental.preprocessing.StringLookup(
+                    vocabulary=list(characters),
+                    mask_token=None, invert=True)
 
+
+def plot_samples(train_dataset, num_to_char):
+
+    fig, ax = plt.subplots(4, 4, figsize=(10, 5))
+    for batch in train_dataset.take(1):
+        images = batch["image"]
+        labels = batch["label"]
+        for i in range(16):
+            img = (images[i] * 255).numpy().astype("uint8")
+            label = tf.strings.reduce_join(num_to_char(labels[i])).numpy().decode("utf-8")
+            ax[i // 4, i % 4].imshow(img[:, :, 0].T, cmap="gray")
+            ax[i // 4, i % 4].set_title(label)
+            ax[i // 4, i % 4].axis("off")
+
+    return fig, ax
 def create_datasets_from_config(config_path):
 
     with open(config_path) as config_file:
         config = yaml.load(config_file)
 
 
-    x_train = np.genfromtxt(os.path.join(config['transform']['input'], 'x_train.txt'), dtype=str)
-    y_train = np.genfromtxt(os.path.join(config['transform']['input'], 'y_train.txt'), dtype=str)
-    x_valid = np.genfromtxt(os.path.join(config['transform']['input'], 'x_valid.txt'), dtype=str)
-    y_valid = np.genfromtxt(os.path.join(config['transform']['input'], 'y_valid.txt'), dtype=str)
-    characters = np.genfromtxt(os.path.join(config['transform']['input'], 'characterset.txt'), dtype=str)
+    x_train = np.genfromtxt(config['transform']['inputs']['x_train'], dtype=str)
+    y_train = np.genfromtxt(config['transform']['inputs']['y_train'], dtype=str)
+    x_valid = np.genfromtxt(config['transform']['inputs']['x_valid'], dtype=str)
+    y_valid = np.genfromtxt(config['transform']['inputs']['y_valid'], dtype=str)
+    characters = list(np.genfromtxt(config['transform']['inputs']['characters'], dtype=str))
 
     train_dataset, validation_dataset = create_datasets(image_height = config['base']['image_height'],
                                                         image_width = config['base']['image_width'],
@@ -66,10 +84,11 @@ def create_datasets_from_config(config_path):
                                                         y_train = y_train,
                                                         y_valid = y_valid)
 
-    print(train_dataset.element_spec)
+    tf.data.experimental.save(train_dataset, config['transform']['outputs']['train_dataset'])
+    tf.data.experimental.save(validation_dataset, config['transform']['outputs']['valid_dataset'])
 
-    tf.data.experimental.save(train_dataset, os.path.join(config['transform']['output'], 'train_dataset'))
-    tf.data.experimental.save(validation_dataset, os.path.join(config['transform']['output'], 'validation_dataset'))
+    fig, _ = plot_samples(validation_dataset, num_to_char=get_decoding(characters))
+    fig.savefig(config['transform']['outputs']['sample_plot'])
 
 
 if __name__ == "__main__":
