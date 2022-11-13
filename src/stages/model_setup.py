@@ -62,7 +62,7 @@ def create_model_from_config(config_path):
     with open(config_path) as config_file:
         config = yaml.load(config_file)
 
-    characters = np.genfromtxt(os.path.join(config['model_setup']['input'], 'characterset.txt'), dtype=str)
+    characters = np.genfromtxt(config['model_setup']['inputs']['characters'], dtype=str)
 
     model = create_model(image_height=config['base']['image_height'],
                          image_width=config['base']['image_width'],
@@ -71,7 +71,7 @@ def create_model_from_config(config_path):
                          model_name=config['model_setup']['model_name'],
                          layer_params = config['model_setup']['layer_params'])
 
-    model.save(os.path.join(config['model_setup']['output'], 'untrained_model.h5'),
+    model.save(config['model_setup']['outputs']['untrained_model'],
                save_format='h5')
 
     return model

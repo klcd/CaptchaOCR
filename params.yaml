@@ -31,12 +31,12 @@ transform:
     valid_dataset: data/datasets/validation_dataset
     sample_plot: plots/sample_plot.png
 
-
-
 model_setup:
 
-  input: data/split
-  output: models/
+  inputs:
+    characters: data/split/characterset.txt
+  outputs:
+    untrained_model: models/untrained_model.h5
   model_name: ocr_model1
   optimizer: keras.optimizers.Adam() #See if this can be done any better
 

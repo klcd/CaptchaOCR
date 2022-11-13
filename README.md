@@ -70,3 +70,11 @@ dvc run --name create_datasets \
  python src/stages/datasets.py --config params.yaml
 ```
 
+```
+dvc run --name model_setup \
+--deps data/split/characterset.txt \
+--outs models/untrained_model.h5 \
+--params model_setup \
+--params base \
+python src/stages/model_setup.py --config params.yaml
+```

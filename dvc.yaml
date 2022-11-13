@@ -25,3 +25,12 @@ stages:
     outs:
     - data/datasets/train_dataset
     - data/datasets/validation_dataset
+  model_setup:
+    cmd: python src/stages/model_setup.py --config params.yaml
+    deps:
+    - data/split/characterset.txt
+    params:
+    - base
+    - model_setup
+    outs:
+    - models/untrained_model.h5

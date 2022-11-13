@@ -83,3 +83,77 @@ stages:
       md5: 11ebb53c2c6718595253309ed0614b75.dir
       size: 4164706
       nfiles: 2
+  model_setup:
+    cmd: python src/stages/model_setup.py --config params.yaml
+    deps:
+    - path: data/split/characterset.txt
+      md5: 6aeac9565ac14d35602fdf95dc8bed1b
+      size: 38
+    params:
+      params.yaml:
+        base:
+          random_seed: 98723
+          image_width: 200
+          image_height: 50
+        model_setup:
+          inputs:
+            characters: data/split/characterset.txt
+          outputs:
+            untrained_model: models/untrained_model.h5
+          model_name: ocr_model1
+          optimizer: keras.optimizers.Adam()
+          layer_params:
+            conv1:
+              name: conv1
+              filters: 32
+              kernel_size:
+              - 3
+              - 3
+              activation: relu
+              kernel_initializer: he_normal
+              padding: same
+            max_pooling1:
+              name: pool1
+              pool_size:
+              - 2
+              - 2
+            conv2:
+              name: conv2
+              filters: 64
+              kernel_size:
+              - 3
+              - 3
+              activation: relu
+              kernel_initializer: he_normal
+              padding: same
+            max_pooling2:
+              name: pool2
+              pool_size:
+              - 2
+              - 2
+            reshape:
+              name: reshape
+            dense1:
+              name: dense1
+              units: 64
+              activation: relu
+            dropout1:
+              name: dropout1
+              rate: 0.2
+            bidirec_lstm1:
+              name: bidirec_lstm1
+              units: 128
+              return_sequences: true
+              dropout: 0.25
+            bidirec_lstm2:
+              name: bidirec_lstm2
+              units: 64
+              return_sequences: true
+              dropout: 0.25
+            dense2:
+              name: dense2
+              activation: softmax
+    outs:
+    - path: models/untrained_model.h5
+      md5: d7f6e32ad2765f85befaabb4e245ccc4
+      size: 1776088
